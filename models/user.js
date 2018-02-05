@@ -22,10 +22,10 @@ exports.findByNickName = (nickname,callback) =>{
 	})
 
 }
-
+	
 exports.save = (user,callback) => {
 	query(
-		'INSERT INTO `user` SET ?',
+		'INSERT INTO `users` SET ?',
 		user,
 		(err, results) =>{
 			if(err){return callback(err)}
