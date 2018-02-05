@@ -9,6 +9,8 @@ const indexController = require('./contorllers/index')
 
 // 首页相关方法路由  
 router.get('/',indexController.showIndex)
+
+
 // 用户相关路由
 // 渲染登录
 router.get('/signin',userController.showSignin)
