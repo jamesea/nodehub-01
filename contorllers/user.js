@@ -11,7 +11,37 @@ exports.showSignin = (req,res) =>{
 }
 
 exports.signin = (req,res) =>{
-  res.send('signin')
+  const signinData = {
+    ...req.body
+  }
+  user.findByEmail(signinData.email,(err,ret) => {
+    if(err){ return res.status(500),json({
+      error:err.message
+    })}
+    if(!ret){
+      return res.status(200).json({
+        code:1,
+        message:'email not ok'
+      })
+    }
+    if(md5(signinData.password) !== ret.password){
+      return res.status(200).json({
+        code:2,
+        message:'password invalid'
+      })
+    }
+
+    // session存储登录状态
+    req.session.user = ret
+
+
+    // 持久化存储
+    res.status(200).json({
+      code:0,
+      message:'success'
+    })
+
+  })
 }
   
 exports.showSignup = (req,res) =>{
@@ -26,14 +56,14 @@ exports.signup = (req,res) =>{
   // 发送响应
   // const body = req.body
   // body.password = md5(body.password)
-  const topicDate ={
+  const signupData ={
     ...req.body,
-    password: md5(req.body.password),
+    password  : md5(req.body.password),
     createdAt : moment().format('YYYY-MM-DD HH:mm:ss'),
     updatedAt : null
   }
   // 验证邮箱占用
-  user.findByEmail(topicDate.email,(err,ret) => {
+  user.findByEmail(signupData.email,(err,ret) => {
     if(err){return res.status(500).json({
       error: err.message
     })}
@@ -42,7 +72,7 @@ exports.signup = (req,res) =>{
       message:'email '
       })}
     // 验证昵称占用
-    user.findByNickName(topicDate.nickname,(err,ret) =>{
+    user.findByNickName(signupData.nickname,(err,ret) =>{
         if(err){return res.status(500).json({
           error: err.message
         })}
@@ -51,11 +81,19 @@ exports.signup = (req,res) =>{
           message:'nickname'
         })}
       
+      
+
    // 持久化数据
-      user.save(topicDate,(err,results) => {
+      user.save(signupData,(err,results) => {
         if(err){return res.status(500).json({
           error: err.message
         })}
+
+        req.session.user = {
+          ...signupData,
+          id:results.insertId
+        }
+        console.log(results)
         res.status(200).json({
           code:0,
           message: 'success'

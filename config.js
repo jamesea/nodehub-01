@@ -1,9 +1,16 @@
 module.exports = {
-	dbConfig: {
-		host :'localhost',
-		user: 'root',
-		password : '123321',
-		database : 'nodetest',
-		connectionLimit : 10
-	}
+    dbConfig: {
+        host: 'localhost',
+        user: 'root',
+        password: '123321',
+        database: 'nodetest',
+        connectionLimit: 10
+    },
+    sessioncfg: {
+        secret: 'keyboard cat',
+        resave: false,
+        saveUninitialized: true
+    }
+
+
 }
