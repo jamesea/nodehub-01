@@ -104,5 +104,8 @@ exports.signup = (req,res) =>{
 }
 
 exports.signout = (req,res) =>{
-  res.send('get edit')
+//清除session
+  delete req.session.user
+// 重定向
+  res.redirect('/signin')
 }
