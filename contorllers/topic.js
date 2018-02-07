@@ -13,10 +13,10 @@ exports.showCreate = (req,res,next) =>{
 
 exports.create = (req,res,next) =>{
 	// 获取表单提交数据
-
 	// 数据验证啊
-
 	// 操作数据库
+	// 发送响
+	// 渲染到页面
 	const topicReq = {
 		...req.body,
 		userId:req.session.user.id,
@@ -30,11 +30,6 @@ exports.create = (req,res,next) =>{
 			message:'成功'
 		})
 	})
-
-	// 发送响应
-
-	// 渲染到页面
-	
 }
 
 exports.showDetail = (req,res,next) =>{
