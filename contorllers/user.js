@@ -6,18 +6,16 @@ const user = require('../models/user')
 
 
 
-exports.showSignin = (req,res) =>{
+exports.showSignin = (req,res,next) =>{
   res.render('signin.html')
 }
 
-exports.signin = (req,res) =>{
+exports.signin = (req,res,next) =>{
   const signinData = {
     ...req.body
   }
   user.findByEmail(signinData.email,(err,ret) => {
-    if(err){ return res.status(500),json({
-      error:err.message
-    })}
+    if(err){ return next(err)}
     if(!ret){
       return res.status(200).json({
         code:1,
@@ -44,11 +42,11 @@ exports.signin = (req,res) =>{
   })
 }
   
-exports.showSignup = (req,res) =>{
+exports.showSignup = (req,res,next) =>{
   res.render('signup.html')
 }
 
-exports.signup = (req,res) =>{
+exports.signup = (req,res,next) =>{
   // 接收表单提交数据
   // body-parser 中间件解析表单post请求体
   // 验证数据有效性  普通数据校验 业务数据校验 
@@ -64,36 +62,28 @@ exports.signup = (req,res) =>{
   }
   // 验证邮箱占用
   user.findByEmail(signupData.email,(err,ret) => {
-    if(err){return res.status(500).json({
-      error: err.message
-    })}
+    if(err){return next(err)}
     if(ret){return res.status(200).json({
       code: 1,
       message:'email '
       })}
     // 验证昵称占用
     user.findByNickName(signupData.nickname,(err,ret) =>{
-        if(err){return res.status(500).json({
-          error: err.message
-        })}
+        if(err){return next(err)}
         if(ret){return res.status(200).json({
           code:2,
           message:'nickname'
-        })}
-      
+        })}      
       
 
    // 持久化数据
       user.save(signupData,(err,results) => {
-        if(err){return res.status(500).json({
-          error: err.message
-        })}
+        if(err){return next(err)}
 
         req.session.user = {
           ...signupData,
           id:results.insertId
         }
-        console.log(results)
         res.status(200).json({
           code:0,
           message: 'success'
@@ -103,7 +93,7 @@ exports.signup = (req,res) =>{
   })
 }
 
-exports.signout = (req,res) =>{
+exports.signout = (req,res,next) =>{
 //清除session
   delete req.session.user
 // 重定向

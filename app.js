@@ -22,11 +22,19 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // session
 app.use(session(sessioncfg))
 
-
+app.use((req,res,next) => {
+	app.locals.user = req.session.user
+	next()
+})
 // 挂在路由容器
 app.use(indexRouter)
 app.use(userRouter) 
 app.use('/topic',topicRouter)
+// 错误处理中间件
+app.use(function(err,req,res,next){
+	console.log(err.stack)
+	res.status(500).send('Something broke!')
+})
 
 
 
