@@ -11,6 +11,7 @@ const userRouter = require('./routes/user')
 const topicRouter = require('./routes/topic')
 
 const {sessioncfg} = require('./config')
+const {checkLogin} = require('./middlewares/auth')
 app.use('/node_modules/',express.static('./node_modules/'))
 app.use('/public/',express.static('./public/'))
 
@@ -22,14 +23,19 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // session
 app.use(session(sessioncfg))
 
+
+// 全局传递session中间件
 app.use((req,res,next) => {
 	app.locals.user = req.session.user
 	next()
 })
+
+
+
 // 挂在路由容器
 app.use(indexRouter)
 app.use(userRouter) 
-app.use('/topic',topicRouter)
+app.use('/topic',checkLogin,topicRouter)
 // 错误处理中间件
 app.use(function(err,req,res,next){
 	console.log(err.stack)

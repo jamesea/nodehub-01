@@ -1,11 +1,19 @@
+const topic = require('../models/topic')
+// 话题创建页内容
 exports.showCreate = (req,res,next) =>{
-	res.render('topic/create.html',{
-		user:req.session.user
+	topic.findAll((err,ret) =>{
+		if(err){return next(err)}
+		res.render('topic/create.html',{
+			topics:ret
+		})
 	})
 }
 
 exports.create = (req,res,next) =>{
-	res.send('get create')
+	// 提取数据库相关字段
+
+	// 渲染到页面
+	
 }
 
 exports.showDetail = (req,res,next) =>{
