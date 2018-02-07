@@ -6,3 +6,10 @@ exports.findAll=callback => {
 		'SELECT * FROM topic_categories',
 		callback)
 }
+
+//创建的话题存入数据库
+exports.save = (topicReq,callback) => {
+
+	const sqlStr = 'INSERT INTO `topics` SET?'
+	query(sqlStr,topicReq,callback)
+}

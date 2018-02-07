@@ -1,6 +1,8 @@
 const topic = require('../models/topic')
+const moment = require('moment')
 // 话题创建页内容
 exports.showCreate = (req,res,next) =>{
+	// 数据库提取话题分类
 	topic.findAll((err,ret) =>{
 		if(err){return next(err)}
 		res.render('topic/create.html',{
@@ -10,7 +12,26 @@ exports.showCreate = (req,res,next) =>{
 }
 
 exports.create = (req,res,next) =>{
-	// 提取数据库相关字段
+	// 获取表单提交数据
+
+	// 数据验证啊
+
+	// 操作数据库
+	const topicReq = {
+		...req.body,
+		userId:req.session.user.id,
+		createdAt:moment().format('YYYY-MM-DD HH:mm:ss')
+	}
+	console.log(topicReq)
+	topic.save(topicReq,(err,ret) => {
+		if(err){return next(err)}
+		res.status(200).json({
+			code:0,
+			message:'成功'
+		})
+	})
+
+	// 发送响应
 
 	// 渲染到页面
 	
