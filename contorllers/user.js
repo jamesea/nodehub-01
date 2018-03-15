@@ -27,7 +27,7 @@ exports.signin = (req, res, next) => {
                 message: 'password invalid'
             })
         }
-
+        
         // session存储登录状态
         req.session.user = ret
 

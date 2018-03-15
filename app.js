@@ -1,9 +1,10 @@
 const express = require('express')
-const session = require('express-session')
-
 const bodyParser = require('body-parser')
-
 const app = express()
+const session = require('express-session')
+// const { dbConfig, sessioncfg } = require('./config')
+const { checkLogin, errorModeles } = require('./middlewares/auth')
+const { MysqlSession } = require('./utilities/mysql-helper.js')
 
 // 引入路由文件
 // const routes = require('./routes/')
@@ -11,12 +12,10 @@ const app = express()
 const indexRouter = require('./routes/index')
 const userRouter = require('./routes/user')
 const topicRouter = require('./routes/topic')
-const { dbConfig, sessioncfg } = require('./config')
-// const { sessioncfg } = require('./config')
-const { checkLogin, errorModeles } = require('./middlewares/auth')
-// session数据存入mysql
-const MySQLStore = require('express-mysql-session')(session)
-const sessionStore = new MySQLStore(dbConfig)
+
+ 
+
+
 
 app.use('/node_modules/', express.static('./node_modules/'))
 app.use('/public/', express.static('./public/'))
@@ -27,9 +26,15 @@ app.engine('html', require('express-art-template'))
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }))
 
-sessioncfg.store = sessionStore
-console.log(sessioncfg)
-app.use(session({...sessioncfg}))
+// // session数据存入mysql
+// const MySQLStore = require('express-mysql-session')(session)
+// const sessionStore = new MySQLStore(dbConfig)
+// app.use(session())
+// sessioncfg.store = sessionStore
+// // session存入mysql
+// app.use(session({ ...sessioncfg }))
+// console.log(MysqlSession())
+app.use(MysqlSession(session))
 
 
 // 全局传递session中间件
